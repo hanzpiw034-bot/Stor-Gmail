@@ -1,1 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection
+    match /users/{userId} {
+      // User bisa baca data miliknya sendiri
+      allow read: if request.auth.uid == userId;
+      // User bisa update data miliknya sendiri
+      allow update: if request.auth.uid == userId;
+      // Owner bisa baca semua data
+      allow read: if isOwner();
+      // Owner bisa update semua data
+      allow update: if isOwner();
+      // Hanya di saat sign up
+      allow create: if request.auth.uid == userId;
+    }
 
+    // Gmail store collection
+    match /gmail_store/{docId} {
+      // User bisa baca Gmail miliknya
+      allow read: if request.auth.uid == resource.data.uid;
+      // Owner bisa baca semua Gmail
+      allow read: if isOwner();
+      // User bisa submit Gmail
+      allow create: if request.auth.uid == request.resource.data.uid;
+      // Owner bisa update status
+      allow update: if isOwner();
+      // Owner bisa delete
+      allow delete: if isOwner();
+    }
+
+    // Withdraw collection
+    match /withdraw/{docId} {
+      // User bisa baca withdraw miliknya
+      allow read: if request.auth.uid == resource.data.uid;
+      // Owner bisa baca semua withdraw
+      allow read: if isOwner();
+      // User bisa submit withdraw
+      allow create: if request.auth.uid == request.resource.data.uid;
+      // Owner bisa update status
+      allow update: if isOwner();
+      // Owner bisa delete
+      allow delete: if isOwner();
+    }
+
+    // Helper functions
+    function isOwner() {
+      return request.auth != null && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'owner';
+    }
+
+    function isUser() {
+      return request.auth != null;
+    }
+  }
+}
