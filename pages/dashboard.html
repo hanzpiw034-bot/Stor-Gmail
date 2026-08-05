@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Gmail Store</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/animation.css">
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230B5FFF' width='100' height='100' rx='20'/><text x='50' y='70' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>G</text></svg>">
+</head>
+<body class="light-mode">
+  <div class="dashboard-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="logo">📧</div>
+          <div>
+            <div class="site-name">Gmail Store</div>
+            <small style="color: #999; font-size: 0.8rem;">v1.0</small>
+          </div>
+        </div>
+        <div class="header-right">
+          <button id="themeToggle" class="theme-toggle">🌙</button>
+          <div class="user-avatar" id="userAvatar" onclick="location.href='profile.html'">
+            <img src="" alt="Avatar" onerror="this.style.display='none'">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <p>Selamat datang di Gmail Store</p>
+      </div>
+
+      <!-- Page Content -->
+      <div class="page-content">
+        <!-- Balance Card -->
+        <div class="card card-primary" style="margin-bottom: 2rem; padding: 2rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+            <div>
+              <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Saldo Saat Ini</div>
+              <div style="font-size: 2.5rem; font-weight: 700;" id="balanceDisplay">Rp. 0</div>
+              <div style="font-size: 0.85rem; opacity: 0.85; margin-top: 1rem;">Harga Gmail: Rp. 2.000</div>
+            </div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button class="btn btn-secondary" onclick="location.href='balance.html'">💸 Tarik Saldo</button>
+              <button class="btn btn-accent" onclick="location.href='withdraw-history.html'">📋 Riwayat</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Gmail</div>
+            <div class="stat-value" id="totalGmail">0</div>
+            <div class="stat-change">Dikirim ke sistem</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value" id="pendingGmail" style="color: var(--warning);">0</div>
+            <div class="stat-change">Menunggu verifikasi</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Diterima</div>
+            <div class="stat-value" id="acceptedGmail" style="color: var(--success);">0</div>
+            <div class="stat-change">Sudah dikonfirmasi</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Ditolak</div>
+            <div class="stat-value" id="rejectedGmail" style="color: var(--danger);">0</div>
+            <div class="stat-change">Tidak lolos verifikasi</div>
+          </div>
+        </div>
+
+        <!-- Additional Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Pendapatan</div>
+            <div class="stat-value" id="totalIncome">Rp. 0</div>
+            <div class="stat-change">Dari Gmail yang diterima</div>
+          </div>
+        </div>
+
+        <!-- Menu Grid -->
+        <div style="margin-top: 2rem;">
+          <h3>Menu</h3>
+          <div class="grid-4" style="margin-top: 1rem;">
+            <div class="card hover-lift" onclick="location.href='store.html'" style="cursor: pointer; text-align: center; padding: 1.5rem;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📤</div>
+              <div style="font-weight: 600; font-size: 0.95rem;">Stor</div>
+              <div style="font-size: 0.8rem; color: #999; margin-top: 0.5rem;">Setor Gmail</div>
+            </div>
+            <div class="card hover-lift" onclick="location.href='history.html'" style="cursor: pointer; text-align: center; padding: 1.5rem;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📜</div>
+              <div style="font-weight: 600; font-size: 0.95rem;">Riwayat</div>
+              <div style="font-size: 0.8rem; color: #999; margin-top: 0.5rem;">Lihat riwayat Gmail</div>
+            </div>
+            <div class="card hover-lift" onclick="location.href='balance.html'" style="cursor: pointer; text-align: center; padding: 1.5rem;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
+              <div style="font-weight: 600; font-size: 0.95rem;">Saldo</div>
+              <div style="font-size: 0.8rem; color: #999; margin-top: 0.5rem;">Kelola saldo</div>
+            </div>
+            <div class="card hover-lift" onclick="location.href='rules.html'" style="cursor: pointer; text-align: center; padding: 1.5rem;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+              <div style="font-weight: 600; font-size: 0.95rem;">Rules</div>
+              <div style="font-size: 0.8rem; color: #999; margin-top: 0.5rem;">Syarat & Ketentuan</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation (Mobile) -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-items">
+      <button class="bottom-nav-item active" data-page="dashboard" onclick="location.href='dashboard.html'">
+        <div class="bottom-nav-icon">🏠</div>
+        <div>Beranda</div>
+      </button>
+      <button class="bottom-nav-item" data-page="history" onclick="location.href='history.html'">
+        <div class="bottom-nav-icon">📜</div>
+        <div>Riwayat</div>
+      </button>
+      <button class="bottom-nav-item" data-page="store" onclick="location.href='store.html'">
+        <div class="bottom-nav-icon">📤</div>
+        <div>Stor</div>
+      </button>
+      <button class="bottom-nav-item" data-page="balance" onclick="location.href='balance.html'">
+        <div class="bottom-nav-icon">💰</div>
+        <div>Saldo</div>
+      </button>
+      <button class="bottom-nav-item" data-page="profile" onclick="location.href='profile.html'">
+        <div class="bottom-nav-icon">👤</div>
+        <div>Profil</div>
+      </button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
+  
+  <script src="../js/firebase.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

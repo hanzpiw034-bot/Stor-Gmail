@@ -1,1 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owner Panel - Gmail Store</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/owner.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/animation.css">
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230B5FFF' width='100' height='100' rx='20'/><text x='50' y='70' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>G</text></svg>">
+</head>
+<body class="light-mode">
+  <div class="owner-container">
+    <!-- Sidebar -->
+    <div class="owner-sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">📧 Gmail Store</div>
+        <div class="sidebar-title">Owner Panel</div>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active" data-page="dashboard" onclick="switchPage('dashboard')">
+          <span class="sidebar-icon">📊</span>
+          <span>Dashboard</span>
+        </li>
+        <li class="sidebar-item" data-page="gmail" onclick="switchPage('gmail')">
+          <span class="sidebar-icon">📧</span>
+          <span>Data Gmail</span>
+        </li>
+        <li class="sidebar-item" data-page="withdraw" onclick="switchPage('withdraw')">
+          <span class="sidebar-icon">💸</span>
+          <span>Penarikan</span>
+        </li>
+        <li class="sidebar-item" data-page="users" onclick="switchPage('users')">
+          <span class="sidebar-icon">👥</span>
+          <span>User</span>
+        </li>
+        <li class="sidebar-item" data-page="settings" onclick="switchPage('settings')">
+          <span class="sidebar-icon">⚙️</span>
+          <span>Pengaturan</span>
+        </li>
+      </ul>
+    </div>
 
+    <!-- Main Content -->
+    <div class="owner-main">
+      <!-- Header -->
+      <div class="owner-header">
+        <div class="owner-header-content">
+          <div>
+            <div class="owner-page-title" id="pageTitle">Dashboard</div>
+            <div class="owner-page-subtitle" id="pageSubtitle">Kelola sistem Gmail Store</div>
+          </div>
+          <div style="display: flex; gap: 1rem; align-items: center;">
+            <button id="themeToggle" class="theme-toggle">🌙</button>
+            <button class="btn btn-danger btn-small" onclick="handleLogout()">Logout</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="owner-content">
+        <!-- Dashboard Page -->
+        <div id="dashboardPage">
+          <div class="owner-stats-grid">
+            <div class="owner-stat-card">
+              <div class="owner-stat-icon">👥</div>
+              <div class="owner-stat-label">Total User</div>
+              <div class="owner-stat-value" id="totalUsers">0</div>
+            </div>
+            <div class="owner-stat-card">
+              <div class="owner-stat-icon">📧</div>
+              <div class="owner-stat-label">Total Gmail</div>
+              <div class="owner-stat-value" id="totalGmails">0</div>
+            </div>
+            <div class="owner-stat-card">
+              <div class="owner-stat-icon">⏳</div>
+              <div class="owner-stat-label">Pending</div>
+              <div class="owner-stat-value" id="pendingGmails">0</div>
+            </div>
+            <div class="owner-stat-card">
+              <div class="owner-stat-icon">✅</div>
+              <div class="owner-stat-label">Diterima</div>
+              <div class="owner-stat-value" id="acceptedGmails">0</div>
+            </div>
+            <div class="owner-stat-card">
+              <div class="owner-stat-icon">❌</div>
+              <div class="owner-stat-label">Ditolak</div>
+              <div class="owner-stat-value" id="rejectedGmails">0</div>
+            </div>
+            <div class="owner-stat-card">
+              <div class="owner-stat-icon">💰</div>
+              <div class="owner-stat-label">Total Pendapatan</div>
+              <div class="owner-stat-value" id="totalRevenue">Rp. 0</div>
+            </div>
+            <div class="owner-stat-card">
+              <div class="owner-stat-icon">⏳</div>
+              <div class="owner-stat-label">Withdraw Pending</div>
+              <div class="owner-stat-value" id="withdrawPending">0</div>
+            </div>
+            <div class="owner-stat-card">
+              <div class="owner-stat-icon">✅</div>
+              <div class="owner-stat-label">Withdraw Selesai</div>
+              <div class="owner-stat-value" id="withdrawCompleted">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gmail Data Page -->
+        <div id="gmailPage" style="display: none;">
+          <div class="search-filter">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="gmailSearch" placeholder="Cari email atau user...">
+            </div>
+            <select id="gmailFilter">
+              <option value="">Semua Status</option>
+              <option value="pending">Pending</option>
+              <option value="diterima">Diterima</option>
+              <option value="ditolak">Ditolak</option>
+            </select>
+            <button class="btn btn-secondary btn-small" onclick="exportGmailData()">📥 Export CSV</button>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email User</th>
+                  <th>Gmail</th>
+                  <th>Password</th>
+                  <th>Harga</th>
+                  <th>Status</th>
+                  <th>Tanggal</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="gmailTable">
+                <tr>
+                  <td colspan="8" style="text-align: center; padding: 2rem;">
+                    <div class="spinner-small"></div> Memuat data...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Withdraw Page -->
+        <div id="withdrawPage" style="display: none;">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Nama DANA</th>
+                  <th>Nomor DANA</th>
+                  <th>Nominal</th>
+                  <th>Status</th>
+                  <th>Tanggal</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="withdrawTable">
+                <tr>
+                  <td colspan="7" style="text-align: center; padding: 2rem;">
+                    <div class="spinner-small"></div> Memuat data...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Users Page -->
+        <div id="usersPage" style="display: none;">
+          <div class="search-filter">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="userSearch" placeholder="Cari user...">
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Saldo</th>
+                  <th>Bergabung</th>
+                </tr>
+              </thead>
+              <tbody id="usersTable">
+                <tr>
+                  <td colspan="5" style="text-align: center; padding: 2rem;">
+                    <div class="spinner-small"></div> Memuat data...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settingsPage" style="display: none;">
+          <div class="settings-section">
+            <div class="settings-title">⚙️ Pengaturan Sistem</div>
+            
+            <div class="settings-row">
+              <div class="settings-label">Email Owner</div>
+              <div class="settings-value" id="ownerEmail">-</div>
+            </div>
+            
+            <div class="settings-row">
+              <div class="settings-label">Username Owner</div>
+              <div class="settings-value" id="ownerUsername">-</div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-label">Minimal Penarikan</div>
+              <div class="settings-value">Rp. 50.000 (tetap)</div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-label">Harga Gmail Default</div>
+              <div class="settings-value">Rp. 2.000 (tetap)</div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-title">📋 Informasi Sistem</div>
+            <div style="padding: 1rem; background: rgba(11, 95, 255, 0.05); border-radius: 8px; border-left: 3px solid var(--primary); font-size: 0.9rem;">
+              <p><strong>Versi:</strong> 1.0</p>
+              <p><strong>Database:</strong> Firebase Firestore</p>
+              <p><strong>Authentication:</strong> Firebase Auth</p>
+              <p><strong>Storage:</strong> Firebase Storage</p>
+              <p style="margin: 0;">Status: ✅ Production Ready</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal untuk aksi Gmail -->
+  <div class="modal" id="gmailActionModal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2 id="modalTitle">Aksi Gmail</h2>
+        <button class="modal-close" onclick="closeModal('gmailActionModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="gmailActionForm">
+          <div class="form-group">
+            <label for="actionStatus">Status</label>
+            <select id="actionStatus" required>
+              <option value="">Pilih Status</option>
+              <option value="diterima">Diterima</option>
+              <option value="ditolak">Ditolak</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="actionReason">Alasan (jika ditolak)</label>
+            <textarea id="actionReason" placeholder="Tulis alasan penolakan..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('gmailActionModal')">Batal</button>
+        <button class="btn btn-primary" onclick="submitGmailAction()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal untuk aksi Withdraw -->
+  <div class="modal" id="withdrawActionModal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2>Aksi Penarikan</h2>
+        <button class="modal-close" onclick="closeModal('withdrawActionModal')">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="withdrawActionForm">
+          <div class="form-group">
+            <label for="withdrawActionStatus">Status</label>
+            <select id="withdrawActionStatus" required>
+              <option value="">Pilih Status</option>
+              <option value="selesai">Selesai</option>
+              <option value="gagal">Gagal</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="withdrawActionReason">Alasan (jika gagal)</label>
+            <textarea id="withdrawActionReason" placeholder="Tulis alasan penolakan..."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('withdrawActionModal')">Batal</button>
+        <button class="btn btn-primary" onclick="submitWithdrawAction()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
+  
+  <script src="../js/firebase.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/owner.js"></script>
+</body>
+</html>

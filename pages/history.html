@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat - Gmail Store</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/animation.css">
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230B5FFF' width='100' height='100' rx='20'/><text x='50' y='70' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>G</text></svg>">
+</head>
+<body class="light-mode">
+  <div class="dashboard-container">
+    <div class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="logo">📧</div>
+          <div class="site-name">Gmail Store</div>
+        </div>
+        <div class="header-right">
+          <button id="themeToggle" class="theme-toggle">🌙</button>
+          <div class="user-avatar" id="userAvatar" onclick="location.href='profile.html'"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="page-header">
+        <h1>Riwayat Gmail</h1>
+        <p>Lihat status setiap Gmail yang Anda setor</p>
+      </div>
+
+      <div class="page-content">
+        <div class="search-filter">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Cari email...">
+          </div>
+          <select id="filterStatus" style="padding: 0.75rem 1rem; border: 1px solid #E5E7EB; border-radius: 8px; background: white;">
+            <option value="">Semua Status</option>
+            <option value="pending">Pending</option>
+            <option value="diterima">Diterima</option>
+            <option value="ditolak">Ditolak</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Harga</th>
+                <th>Status</th>
+                <th>Tanggal</th>
+                <th>Alasan</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable">
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 3rem;">
+                  <div class="spinner-small" style="display: inline-block;"></div>
+                  <p>Memuat data...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="bottom-nav-items">
+      <button class="bottom-nav-item" data-page="dashboard" onclick="location.href='dashboard.html'">
+        <div class="bottom-nav-icon">🏠</div>
+        <div>Beranda</div>
+      </button>
+      <button class="bottom-nav-item active" data-page="history" onclick="location.href='history.html'">
+        <div class="bottom-nav-icon">📜</div>
+        <div>Riwayat</div>
+      </button>
+      <button class="bottom-nav-item" data-page="store" onclick="location.href='store.html'">
+        <div class="bottom-nav-icon">📤</div>
+        <div>Stor</div>
+      </button>
+      <button class="bottom-nav-item" data-page="balance" onclick="location.href='balance.html'">
+        <div class="bottom-nav-icon">💰</div>
+        <div>Saldo</div>
+      </button>
+      <button class="bottom-nav-item" data-page="profile" onclick="location.href='profile.html'">
+        <div class="bottom-nav-icon">👤</div>
+        <div>Profil</div>
+      </button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
+  
+  <script src="../js/firebase.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/history.js"></script>
+</body>
+</html>

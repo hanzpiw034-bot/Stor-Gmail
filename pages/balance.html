@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saldo - Gmail Store</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/animation.css">
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230B5FFF' width='100' height='100' rx='20'/><text x='50' y='70' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>G</text></svg>">
+</head>
+<body class="light-mode">
+  <div class="dashboard-container">
+    <div class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="logo">📧</div>
+          <div class="site-name">Gmail Store</div>
+        </div>
+        <div class="header-right">
+          <button id="themeToggle" class="theme-toggle">🌙</button>
+          <div class="user-avatar" id="userAvatar" onclick="location.href='profile.html'"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="page-header">
+        <h1>Saldo</h1>
+        <p>Kelola saldo Anda</p>
+      </div>
+
+      <div class="page-content">
+        <div class="stats-grid" style="margin-bottom: 2rem;">
+          <div class="stat-card">
+            <div class="stat-label">Saldo Saat Ini</div>
+            <div class="stat-value" id="currentBalance">Rp. 0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Pendapatan</div>
+            <div class="stat-value" id="totalEarnings">Rp. 0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Gmail Diterima</div>
+            <div class="stat-value" id="totalAccepted">0</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 2rem;">
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="location.href='withdraw.html'">
+              💸 Ajukan Penarikan
+            </button>
+            <button class="btn btn-secondary" onclick="location.href='withdraw-history.html'">
+              📋 Riwayat Penarikan
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Informasi Penarikan</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+            <div style="padding: 1rem; background: rgba(11, 95, 255, 0.05); border-radius: 8px;">
+              <div style="color: #999; margin-bottom: 0.5rem;">Minimal Penarikan</div>
+              <div style="font-size: 1.2rem; font-weight: 700;">Rp. 50.000</div>
+            </div>
+            <div style="padding: 1rem; background: rgba(19, 185, 129, 0.05); border-radius: 8px;">
+              <div style="color: #999; margin-bottom: 0.5rem;">Metode Pembayaran</div>
+              <div style="font-size: 1.2rem; font-weight: 700;">💳 DANA</div>
+            </div>
+          </div>
+          <div style="margin-top: 1rem; padding: 1rem; background: rgba(245, 158, 11, 0.05); border-left: 3px solid var(--warning); border-radius: 6px; font-size: 0.9rem;">
+            <strong>Catatan:</strong> Penarikan akan diproses oleh admin dalam 24 jam. Pastikan nomor DANA Anda benar.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="bottom-nav-items">
+      <button class="bottom-nav-item" data-page="dashboard" onclick="location.href='dashboard.html'">
+        <div class="bottom-nav-icon">🏠</div>
+        <div>Beranda</div>
+      </button>
+      <button class="bottom-nav-item" data-page="history" onclick="location.href='history.html'">
+        <div class="bottom-nav-icon">📜</div>
+        <div>Riwayat</div>
+      </button>
+      <button class="bottom-nav-item" data-page="store" onclick="location.href='store.html'">
+        <div class="bottom-nav-icon">📤</div>
+        <div>Stor</div>
+      </button>
+      <button class="bottom-nav-item active" data-page="balance" onclick="location.href='balance.html'">
+        <div class="bottom-nav-icon">💰</div>
+        <div>Saldo</div>
+      </button>
+      <button class="bottom-nav-item" data-page="profile" onclick="location.href='profile.html'">
+        <div class="bottom-nav-icon">👤</div>
+        <div>Profil</div>
+      </button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
+  
+  <script src="../js/firebase.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/balance.js"></script>
+</body>
+</html>
