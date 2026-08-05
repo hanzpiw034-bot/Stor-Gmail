@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Gmail Store</title>
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/animation.css">
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230B5FFF' width='100' height='100' rx='20'/><text x='50' y='70' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>G</text></svg>">
+</head>
+<body class="light-mode">
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p class="loading-text">Loading...</p>
+    </div>
+  </div>
+
+  <!-- Login Container -->
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">🔑</div>
+        <h1 class="auth-title">Masuk</h1>
+        <p class="auth-subtitle">Akses akun Gmail Store Anda</p>
+      </div>
+
+      <form class="auth-form" id="loginForm">
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="email@gmail.com" required>
+          <div class="form-error"></div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-group">
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
+            <button type="button" class="toggle-password" id="togglePassword">👁️</button>
+          </div>
+          <div class="form-error"></div>
+        </div>
+
+        <!-- Remember Me -->
+        <div class="remember-me">
+          <input type="checkbox" id="remember" name="remember" class="checkbox-custom">
+          <label for="remember" style="margin: 0; font-size: 0.9rem;">Ingat saya</label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="auth-button" id="loginBtn">
+          <span id="loginBtnText">Masuk</span>
+          <span id="loginBtnSpinner" style="display: none;" class="spinner-small"></span>
+        </button>
+
+        <!-- Divider -->
+        <div class="divider">Atau</div>
+
+        <!-- Google Login -->
+        <button type="button" class="auth-button" id="googleLoginBtn" style="background: linear-gradient(135deg, #EA4335 0%, #c5221f 100%);">
+          Login dengan Google
+        </button>
+      </form>
+
+      <!-- Sign Up Link -->
+      <div class="auth-link">
+        Belum punya akun? <a href="register.html">Daftar di sini</a>
+      </div>
+
+      <!-- Demo Account Info -->
+      <div style="margin-top: 2rem; padding: 1rem; background: rgba(11, 95, 255, 0.05); border-left: 3px solid var(--primary); border-radius: 6px; font-size: 0.85rem;">
+        <strong>Akun Demo Owner:</strong>
+        <div style="margin-top: 0.5rem; font-family: monospace;">
+          Email: hanzpiw.owner@example.com<br>
+          Password: hanzpiwsukatobrut
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
+
+  <!-- Theme Toggle -->
+  <button id="themeToggle" style="position: fixed; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.9); border: 1px solid #E5E7EB; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem; z-index: 999; transition: all 0.3s ease;">🌙</button>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
+  
+  <script src="js/firebase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/theme.js"></script>
+
+  <script>
+    // Toggle Password Visibility
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const passwordInput = document.getElementById('password');
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      this.textContent = isPassword ? '🙈' : '👁️';
+    });
+
+    // Form Submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const remember = document.getElementById('remember').checked;
+      
+      if (!email || !password) {
+        showToast('Email dan password harus diisi', 'error');
+        return;
+      }
+
+      // Show loading
+      document.getElementById('loginBtn').disabled = true;
+      document.getElementById('loginBtnText').style.display = 'none';
+      document.getElementById('loginBtnSpinner').style.display = 'inline-block';
+
+      try {
+        // Login
+        await login(email, password);
+        
+        // Save remember me
+        saveRememberMe(email, remember);
+        
+        // Get user data
+        await updateCurrentUserData();
+        
+        showToast('Berhasil login!', 'success');
+        
+        // Redirect based on role
+        setTimeout(() => {
+          if (currentUserData && currentUserData.role === 'owner') {
+            window.location.href = 'pages/owner.html';
+          } else {
+            window.location.href = 'pages/dashboard.html';
+          }
+        }, 500);
+      } catch (error) {
+        showToast(error.message, 'error');
+        document.getElementById('loginBtn').disabled = false;
+        document.getElementById('loginBtnText').style.display = 'inline';
+        document.getElementById('loginBtnSpinner').style.display = 'none';
+      }
+    });
+
+    // Google Login
+    document.getElementById('googleLoginBtn').addEventListener('click', async (e) => {
+      e.preventDefault();
+      
+      document.getElementById('googleLoginBtn').disabled = true;
+
+      try {
+        const user = await loginWithGoogle();
+        
+        // Get user data
+        await updateCurrentUserData();
+        
+        showToast('Berhasil login dengan Google!', 'success');
+        
+        setTimeout(() => {
+          if (currentUserData && currentUserData.role === 'owner') {
+            window.location.href = 'pages/owner.html';
+          } else {
+            window.location.href = 'pages/dashboard.html';
+          }
+        }, 500);
+      } catch (error) {
+        if (error.code !== 'auth/popup-closed-by-user') {
+          showToast(error.message, 'error');
+        }
+        document.getElementById('googleLoginBtn').disabled = false;
+      }
+    });
+
+    // Initialize remember me
+    document.addEventListener('DOMContentLoaded', () => {
+      initRememberMe();
+      
+      const overlay = document.getElementById('loadingOverlay');
+      if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.pointerEvents = 'none';
+        }, 300);
+      }
+    });
+  </script>
+</body>
+</html>
