@@ -160,12 +160,6 @@
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      // Check if Firebase loaded
-      if (typeof firebase === 'undefined' || typeof auth === 'undefined') {
-        showToast('Firebase masih loading... tunggu sebentar', 'error');
-        return;
-      }
-      
       const username = document.getElementById('username').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
@@ -181,13 +175,23 @@
       document.getElementById('registerBtnSpinner').style.display = 'inline-block';
 
       try {
-        // Check if signUp function exists
-        if (typeof signUp !== 'function') {
-          throw new Error('SignUp function tidak terdefinisi. Reload page!');
+        // Wait for Firebase if needed
+        let signUpFunc = null;
+        let attempts = 0;
+        while (!signUpFunc && attempts < 20) {
+          signUpFunc = window.signUp || (typeof signUp !== 'undefined' ? signUp : null);
+          if (!signUpFunc) {
+            await new Promise(r => setTimeout(r, 100));
+            attempts++;
+          }
+        }
+        
+        if (!signUpFunc) {
+          throw new Error('Firebase tidak siap. Refresh page dan coba lagi.');
         }
         
         // Sign up
-        await signUp(email, password, username);
+        await signUpFunc(email, password, username);
         
         showToast('Akun berhasil dibuat!', 'success');
         
@@ -216,20 +220,25 @@
     document.getElementById('googleRegisterBtn').addEventListener('click', async (e) => {
       e.preventDefault();
       
-      // Check if Firebase loaded
-      if (typeof firebase === 'undefined' || typeof auth === 'undefined') {
-        showToast('Firebase masih loading... tunggu sebentar', 'error');
-        return;
-      }
-      
       document.getElementById('googleRegisterBtn').disabled = true;
 
       try {
-        if (typeof loginWithGoogle !== 'function') {
-          throw new Error('Google register function tidak terdefinisi');
+        // Wait for Firebase if needed
+        let loginFunc = null;
+        let attempts = 0;
+        while (!loginFunc && attempts < 20) {
+          loginFunc = window.loginWithGoogle || (typeof loginWithGoogle !== 'undefined' ? loginWithGoogle : null);
+          if (!loginFunc) {
+            await new Promise(r => setTimeout(r, 100));
+            attempts++;
+          }
         }
         
-        const user = await loginWithGoogle();
+        if (!loginFunc) {
+          throw new Error('Firebase tidak siap. Refresh page dan coba lagi.');
+        }
+        
+        const user = await loginFunc();
         
         // Get user data
         await updateCurrentUserData();
@@ -249,26 +258,13 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-      // Wait for Firebase to initialize
-      let attempts = 0;
-      const checkFirebase = setInterval(() => {
-        if (typeof auth !== 'undefined' && auth !== null) {
-          clearInterval(checkFirebase);
-          
-          const overlay = document.getElementById('loadingOverlay');
-          if (overlay) {
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-              overlay.style.pointerEvents = 'none';
-            }, 300);
-          }
-        }
-        attempts++;
-        if (attempts > 50) { // 5 seconds timeout
-          clearInterval(checkFirebase);
-          console.warn('Firebase initialization timeout');
-        }
-      }, 100);
+      const overlay = document.getElementById('loadingOverlay');
+      if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.pointerEvents = 'none';
+        }, 300);
+      }
     });
   </script>
 </body>

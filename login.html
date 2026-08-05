@@ -113,12 +113,6 @@
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      // Check if Firebase loaded
-      if (typeof firebase === 'undefined' || typeof auth === 'undefined') {
-        showToast('Firebase masih loading... tunggu sebentar', 'error');
-        return;
-      }
-      
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const remember = document.getElementById('remember').checked;
@@ -134,13 +128,23 @@
       document.getElementById('loginBtnSpinner').style.display = 'inline-block';
 
       try {
-        // Check if login function exists
-        if (typeof login !== 'function') {
-          throw new Error('Login function tidak terdefinisi. Reload page!');
+        // Wait for Firebase if needed
+        let loginFunc = null;
+        let attempts = 0;
+        while (!loginFunc && attempts < 20) {
+          loginFunc = window.login || (typeof login !== 'undefined' ? login : null);
+          if (!loginFunc) {
+            await new Promise(r => setTimeout(r, 100));
+            attempts++;
+          }
+        }
+        
+        if (!loginFunc) {
+          throw new Error('Firebase tidak siap. Refresh page dan coba lagi.');
         }
         
         // Login
-        await login(email, password);
+        await loginFunc(email, password);
         
         // Save remember me
         saveRememberMe(email, remember);
@@ -170,20 +174,25 @@
     document.getElementById('googleLoginBtn').addEventListener('click', async (e) => {
       e.preventDefault();
       
-      // Check if Firebase loaded
-      if (typeof firebase === 'undefined' || typeof auth === 'undefined') {
-        showToast('Firebase masih loading... tunggu sebentar', 'error');
-        return;
-      }
-      
       document.getElementById('googleLoginBtn').disabled = true;
 
       try {
-        if (typeof loginWithGoogle !== 'function') {
-          throw new Error('Google login function tidak terdefinisi');
+        // Wait for Firebase if needed
+        let loginFunc = null;
+        let attempts = 0;
+        while (!loginFunc && attempts < 20) {
+          loginFunc = window.loginWithGoogle || (typeof loginWithGoogle !== 'undefined' ? loginWithGoogle : null);
+          if (!loginFunc) {
+            await new Promise(r => setTimeout(r, 100));
+            attempts++;
+          }
         }
         
-        const user = await loginWithGoogle();
+        if (!loginFunc) {
+          throw new Error('Firebase tidak siap. Refresh page dan coba lagi.');
+        }
+        
+        const user = await loginFunc();
         
         // Get user data
         await updateCurrentUserData();
@@ -207,27 +216,15 @@
 
     // Initialize remember me
     document.addEventListener('DOMContentLoaded', () => {
-      // Wait for Firebase to initialize
-      let attempts = 0;
-      const checkFirebase = setInterval(() => {
-        if (typeof auth !== 'undefined' && auth !== null) {
-          clearInterval(checkFirebase);
-          initRememberMe();
-          
-          const overlay = document.getElementById('loadingOverlay');
-          if (overlay) {
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-              overlay.style.pointerEvents = 'none';
-            }, 300);
-          }
-        }
-        attempts++;
-        if (attempts > 50) { // 5 seconds timeout
-          clearInterval(checkFirebase);
-          console.warn('Firebase initialization timeout');
-        }
-      }, 100);
+      initRememberMe();
+      
+      const overlay = document.getElementById('loadingOverlay');
+      if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.pointerEvents = 'none';
+        }, 300);
+      }
     });
   </script>
 </body>
