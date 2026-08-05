@@ -142,9 +142,9 @@ const handleLogout = async () => {
 const initializeOwnerAccount = async () => {
   try {
     const ownerData = {
-      email: 'hanzpiw.owner@example.com',
-      password: 'hanzpiwsukatobrut',
-      username: 'hanzpiwsakitpinggang'
+      email: 'admin@stor.com',
+      password: 'TempAdmin123!',
+      username: 'StorAdmin'
     };
     
     // Check if owner exists

@@ -3,16 +3,10 @@
 // ============================================
 // CATATAN: Ganti dengan Firebase Config Anda sendiri
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAcsb57CiuzAJKt2uFpYcTal_2fq1M6AEM",
   authDomain: "project-stor-b9e7d.firebaseapp.com",
-  databaseURL: "https://project-stor-b9e7d-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "project-stor-b9e7d",
   storageBucket: "project-stor-b9e7d.firebasestorage.app",
   messagingSenderId: "740903702978",
