@@ -160,6 +160,12 @@
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
+      // Check if Firebase loaded
+      if (typeof firebase === 'undefined' || typeof auth === 'undefined') {
+        showToast('Firebase masih loading... tunggu sebentar', 'error');
+        return;
+      }
+      
       const username = document.getElementById('username').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
@@ -175,6 +181,11 @@
       document.getElementById('registerBtnSpinner').style.display = 'inline-block';
 
       try {
+        // Check if signUp function exists
+        if (typeof signUp !== 'function') {
+          throw new Error('SignUp function tidak terdefinisi. Reload page!');
+        }
+        
         // Sign up
         await signUp(email, password, username);
         
@@ -205,9 +216,19 @@
     document.getElementById('googleRegisterBtn').addEventListener('click', async (e) => {
       e.preventDefault();
       
+      // Check if Firebase loaded
+      if (typeof firebase === 'undefined' || typeof auth === 'undefined') {
+        showToast('Firebase masih loading... tunggu sebentar', 'error');
+        return;
+      }
+      
       document.getElementById('googleRegisterBtn').disabled = true;
 
       try {
+        if (typeof loginWithGoogle !== 'function') {
+          throw new Error('Google register function tidak terdefinisi');
+        }
+        
         const user = await loginWithGoogle();
         
         // Get user data
@@ -228,13 +249,26 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-      const overlay = document.getElementById('loadingOverlay');
-      if (overlay) {
-        overlay.style.opacity = '0';
-        setTimeout(() => {
-          overlay.style.pointerEvents = 'none';
-        }, 300);
-      }
+      // Wait for Firebase to initialize
+      let attempts = 0;
+      const checkFirebase = setInterval(() => {
+        if (typeof auth !== 'undefined' && auth !== null) {
+          clearInterval(checkFirebase);
+          
+          const overlay = document.getElementById('loadingOverlay');
+          if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+              overlay.style.pointerEvents = 'none';
+            }, 300);
+          }
+        }
+        attempts++;
+        if (attempts > 50) { // 5 seconds timeout
+          clearInterval(checkFirebase);
+          console.warn('Firebase initialization timeout');
+        }
+      }, 100);
     });
   </script>
 </body>
