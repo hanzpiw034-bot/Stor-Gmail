@@ -190,16 +190,30 @@ const initializeOwnerAccount = async () => {
 
 // Initialize auth when page loads
 document.addEventListener('DOMContentLoaded', () => {
-  initAuth().then(() => {
-    handleAutoLogin();
-  });
-  
-  // Initialize owner account on first load
-  const ownerInitialized = localStorage.getItem('ownerInitialized');
-  if (!ownerInitialized) {
-    initializeOwnerAccount().then(() => {
-      localStorage.setItem('ownerInitialized', 'true');
+  try {
+    initAuth().then(() => {
+      handleAutoLogin();
+    }).catch(err => {
+      console.error('Auth init error:', err);
     });
+    
+    // Initialize owner account on first load (skip on public pages)
+    const path = window.location.pathname;
+    const publicPages = ['/index.html', '/login.html', '/register.html', '/404.html'];
+    const isPublicPage = publicPages.some(page => path.includes(page));
+    
+    if (!isPublicPage) {
+      const ownerInitialized = localStorage.getItem('ownerInitialized');
+      if (!ownerInitialized) {
+        initializeOwnerAccount().then(() => {
+          localStorage.setItem('ownerInitialized', 'true');
+        }).catch(err => {
+          console.error('Owner init error:', err);
+        });
+      }
+    }
+  } catch (error) {
+    console.error('DOMContentLoaded error:', error);
   }
 });
 

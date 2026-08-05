@@ -21,14 +21,8 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// Enable offline persistence
-db.enablePersistence().catch((err) => {
-  if (err.code === 'failed-precondition') {
-    console.log('Multiple tabs open');
-  } else if (err.code === 'unimplemented') {
-    console.log('Browser does not support persistence');
-  }
-});
+// Test Firebase loaded
+console.log('✓ Firebase initialized successfully');
 
 // ============================================
 // AUTHENTICATION FUNCTIONS
